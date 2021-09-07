@@ -1,0 +1,105 @@
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="notFoundImage mb-3">
+            <img src="assets/images/BountifulPalatableHerring-size_restricted.gif" class="img-fluid access-image" alt="">
+        </div>
+
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"
+                    class="dropdown-toggle">Users Management</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a (click)="CheckUser()">Users</a>
+                    </li>
+                    <li>
+                        <a (click)="CheckUserRoleList()">Roles</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#pageCategory" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Categories</a>
+                <ul class="collapse list-unstyled" id="pageCategory">
+                    <li>
+                        <a (click)="GetCategoryList()"> Main Categories</a>
+                    </li>
+                    <li>
+                        <a (click)="GetSubCategoryList()">Sub Categories</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#pageMovie" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Show Management</a>
+                <ul class="collapse list-unstyled" id="pageMovie">
+                    <li>
+                        <a (click)="GetMovieList()">Shows</a>
+                    </li>
+                    <li>
+                        <a (click)="GetMovieLinkList()">Links</a>
+                    </li>
+                    <li>
+                        <a (click)="GetMovieActorList()">Show Actors</a>
+                    </li>
+                    <li>
+                        <a (click)="GetActorList()">Actors</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid btn-res">
+                <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                    <i class="fa fa-align-left"></i>
+                </button>
+                <div class="pl-2 pr-2 title" style="display:inline-block;"> 
+                    Site Settings
+                </div>
+            </div>
+           
+        </nav>
+
+        <div class="container main-panel">
+            <div *ngIf="isUserList">
+                <!-- <div class="alert alert-primary" role="alert">
+                    <strong>Users Menu</strong>
+                </div> -->
+                <div>
+                    <button type="button" class="btn btn-outline-success mb-3" (click)="AddUser()">New User</button>
+                </div>
+                <app-users></app-users>
+            </div>
+            <div *ngIf="isUserRolesList">
+                <!-- <div class="alert alert-primary" role="alert">
+                    <strong>Users Role</strong>
+                </div> -->
+                <app-user-roles></app-user-roles>
+            </div>
+            <div *ngIf="isAddUser">
+                <app-add-user></app-add-user>
+            </div>
+            <div *ngIf="isCategoryList">
+                <app-categry-list></app-categry-list>
+            </div>
+            <div *ngIf="isSubCategoryList">
+                <app-sub-category-list></app-sub-category-list>
+            </div>
+            <div *ngIf="isActorList">
+                <app-actor-list></app-actor-list>
+            </div>
+            <div *ngIf="isMovieList">
+                <app-movie-list></app-movie-list>
+            </div>
+            <div *ngIf="isMovieLinkList">
+                <app-movie-link-list></app-movie-link-list>
+            </div>  
+            <div *ngIf="isMovieActorList">
+                <app-movie-actor-list></app-movie-actor-list>
+            </div>
+        </div>
+    </div>
+</div>

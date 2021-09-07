@@ -1,0 +1,187 @@
+<div class="container mt-4 mb-4">
+    <!-- <button type="button" class="btn btn-primary mb-3" (click)="backToList()">العودة لقائمة الافلام</button> -->
+    <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="sucMsg">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>{{sucMsg}}</strong>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="errMsg">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <strong>{{errMsg}}</strong>
+    </div>
+    <form [formGroup]="movieForm" (ngSubmit)=" AddMovie()"> 
+        <div class="card">
+            <h4 class="card-title pt-3 pl-3">Main Information</h4> 
+            <div class="card-body">
+                <div class="form-group">
+                    <select class="custom-select" formControlName="catId" required>
+                        <option selected value="0" disabled>Show Category</option>
+                        <option *ngFor="let cat of subCategories" [value]="cat.id">{{cat.subCategoryName}}</option>
+                    </select>
+                    <div class="text-danger"
+                        *ngIf="this.movieForm.get('catId')?.value < 1 && this.movieForm.get('catId')?.touched">
+                        {{messages.catId.requierd}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" formControlName="movieName" class="form-control" name="" id=""
+                        placeholder="Show Name">
+                    <div class="text-danger"
+                        *ngIf="this.movieForm.get('movieName')?.invalid && this.movieForm.get('movieName')?.touched">
+                        {{messages.movieName.requierd}}
+                    </div>
+                    <div class="text-danger" *ngIf="isMovieExists(this.movieForm.get('movieName')?.value)">
+                        {{messages.movieName.exists}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea type="text" rows="4" formControlName="story" class="form-control" name="" id=""
+                        placeholder="Story"></textarea>
+                    <div class="text-danger"
+                        *ngIf="this.movieForm.get('story')?.invalid && this.movieForm.get('story')?.touched">
+                        {{messages.story.requierd}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" formControlName="trailer" class="form-control" name="" id=""
+                        placeholder="Trailer URL">
+                    <div class="text-danger"
+                        *ngIf="this.movieForm.get('trailer')?.invalid && this.movieForm.get('trailer')?.touched">
+                        <div *ngIf="this.movieForm.get('trailer')?.errors?.pattern">
+                            {{messages.trailer.valid}}
+                        </div>
+                        <div *ngIf="this.movieForm.get('trailer')?.errors?.required">
+                            {{messages.trailer.requierd}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+                                <input type="file" formControlName="post" accept="image/*" class="custom-file-input"
+                                    id="actorImage" (change)="HandleFiles($event)"
+                                    aria-describedby="inputGroupFileAddon01">
+                                <label class="custom-file-label upload-lbl" for="post">
+                                    <span *ngIf="img !== null">{{img?.name}}</span>
+                                    <span *ngIf="img == null">Choose Show Poster</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="text-danger" *ngIf="this.movieForm.get('post')?.touched && img === null">
+                            {{messages.post.requierd}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img id="image"  width="340"height="350" class="rounded border bg-light" [src]="urlImage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <h4 class="card-title pt-3 pl-3">Actors</h4>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 form-group">
+                        <select id="actorId" class="custom-select" formControlName="actorId" required
+                            (change)="OnActorChange()">
+                            <option selected value="0" disabled>Choose the Actor</option>
+                            <option *ngFor="let act of actors" [value]="act.id">{{act.actorName}}</option>
+                        </select>
+                        <div class="text-danger"
+                            *ngIf="this.movieForm.get('actorId')?.value < 1 && this.movieForm.get('actorId')?.touched">
+                            {{messages.actorId.requierd}}
+                        </div>
+                        <div class="text-danger" *ngIf="isActorExists">
+                            {{messages.actorId.exists}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" name="" id="" class="btn btn-primary btn-block"
+                            (click)="AddActor()">{{btnActor}}</button>
+                    </div>
+                </div>
+                <div *ngIf="isAddActor">
+                    <div class="card">
+                        <div class="card-body">
+                            <app-add-actor></app-add-actor>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-inline-block" formArrayName="actorControl"
+                        *ngFor="let act of actorControl.controls; let i = index;">
+                        <div [formGroupName]="i">
+                            <div class="alert alert-primary alert-dismissible fade show d-inline-block m-2" role="alert"
+                                *ngIf="act.value.actId > 0">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                    (click)="onMyClick(i)">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <input type="hidden" formControlName="actId" [value]="act.value.actId">
+                                <label for="actName">{{act.value.actName}}</label>
+                                <input type="hidden" id="actName" formControlName="actName" class="myTxt"
+                                    [value]="act.value.actName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3 mb-3">
+            <div class="card-body">
+                <h4 class="card-title">Show Link</h4>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+
+                                <input type="file" formControlName="film" accept="video/*" class="custom-file-input"
+                                    id="movie" (change)="HandleFilmes($event)" aria-describedby="inputGroupFileAddon01">
+                                <label class="custom-file-label upload-lbl" for="post">
+                                    <span *ngIf="film !== null">{{film?.name}}</span>
+                                    <span *ngIf="film == null">Choose Show Link</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="text-danger" *ngIf="this.movieForm.get('film')?.touched && film === null">
+                            {{messages.film.requierd}}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <video controls width="100%">
+                            <source id="mov"  src="" type="">
+                        </video>
+                    </div>
+                </div>
+                <!-- <button type="button" class="btn btn-primary mb-3" (click)="AddLink()">Add New Download Link</button> -->
+                <div>
+                    <div formArrayName="links" class="form-group" *ngFor="let link of links.controls; let i = index">
+                        <div [formGroupName]="i" *ngIf="i > 0">
+                            <div class="alert alert-light alert-dismissible fade show mb-0 pb-0" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <input type="text" class="form-control" [pattern]="linkVal" formControlName="link" id=""
+                                    placeholder="Download Link">
+                                <div class="text-danger"
+                                    *ngIf="this.movieForm.get(['links', i])?.touched && isLinkValid(link.value.link)">
+                                    {{messages.link.requierd}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" name="" id="s" class="btn btn-success btn-lg btn-block mt-4 mb-4"
+            [disabled]="movieForm.invalid || actorIds.length <= 0 || isMovieExists(movieForm.get('movieName')?.value)">Add New Show</button>              
+    </form>
+</div>

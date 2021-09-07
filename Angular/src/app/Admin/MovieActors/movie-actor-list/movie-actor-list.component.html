@@ -1,0 +1,78 @@
+<div class="user-role">
+    <!-- <div class="alert alert-primary mb-3" role="alert">
+        <strong>قائمة ممثلين الأفلام</strong>
+    </div> -->
+    <button type="button" class="btn btn-outline-success mb-3" (click)="AddMovieActor()">New Actor Show</button>
+    <form [formGroup]="formSearch" (ngSubmit)="onSearch()">
+        <div class="row mb-3 mr-0 ml-0">
+            <input type="text" class="form-control col-md-5" formControlName="search" placeholder="Serach ....">
+            <button type="submit" class="btn btn-dark col-md-1" [disabled]="formSearch.invalid">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </form>
+    <div *ngIf="movieActors.length > 0">
+        <table id="tbl" class="table table-light rounded mb-3">
+            <thead>
+                <tr class="bg-dark text-light">
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Actor</th>
+                    <th></th>
+                    <th>
+                        <input type="checkbox" class="ckheader" (change)="SelectAll()">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of movieActors">
+                    <td scope="row">
+                        {{item.movie.movieName}}
+                    </td>
+                    <td>
+                        {{item.movie.subCategory.subCategoryName}}
+                    </td>
+                    <td>
+                        {{item.actor.actorName}}
+                    </td>
+                    <!-- <td>
+                        <button type="button" class="btn btn-primary btn-sm"
+                            (click)="EditMovieActor(item.id)">Edit</button>
+                    </td> -->
+                    <td>
+                        <input type="checkbox" class="ckitem" value="{{item.id}}" (change)="ItemChecked($event)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#modelId"
+                (click)="DeleteCount()" [disabled]="!IsDelete()">Delete
+            </button>
+        </div>
+    </div>
+    <div *ngIf="movieActors.length < 1">
+        <div class="alert alert-danger" role="alert">
+            <strong>No Results</strong>
+            <button type="button" class="btn btn-primary m-4" (click)="GetMovieActors('')">Update The Menu</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Alert</h5>
+            </div>
+            <div class="modal-body">
+                You have selected the number of {{num}} items to delete. Do you really want to delete?
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="DeleteConfirm()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

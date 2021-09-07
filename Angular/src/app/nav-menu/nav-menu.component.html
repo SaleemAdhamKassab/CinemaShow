@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" routerLink="">{{title}}</a>
+    <a class="nav-link" routerLink="controlpanel" *ngIf="IsAdmin()">Control Panel</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown" >
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item  dropleft">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user-circle ml-2"></i>
+                 </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <div class="" *ngIf="!isUserRegistered()">
+                        <a class="dropdown-item" routerLink="register">Register</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" routerLink="login">Login</a>
+                    </div>
+                    <div *ngIf="isUserRegistered()">
+                        <a class="dropdown-item" href="#" (click)="Logout()">Logout</a>
+                    </div>
+                </div>
+        </li>
+    </ul>
+</div>
+</nav>
